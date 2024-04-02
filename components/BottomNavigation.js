@@ -15,8 +15,8 @@ const MyComponent = () => {
     {
       key: "home",
       title: "Home",
-      focusedIcon: "heart",
-      unfocusedIcon: "heart-outline",
+      focusedIcon: "home",
+      unfocusedIcon: "home-outline",
     },
     {
       key: "journal",

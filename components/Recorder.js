@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { sendAudioToBackend } from "../api";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
-import Transcript from "./Transcript";
 
 export default function Recorder() {
   const {
@@ -58,16 +57,17 @@ export default function Recorder() {
         disabled={submissionStatus === "submitting"}
       />
       {transcript && <Text>{transcript}</Text>}
-      <Transcript transcript={transcript} />
     </View>
   );
 }
 
+{
+  /* <Transcript transcript={transcript} /> */
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#fff",
     alignItems: "center",
     padding: 20,
   },
