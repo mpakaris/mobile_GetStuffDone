@@ -1,6 +1,7 @@
 import { Audio } from "expo-av";
 import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { IconButton, MD3Colors } from "react-native-paper";
 import { sendAudioToBackend } from "../api";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
 
@@ -51,24 +52,37 @@ export default function Recorder() {
 
   return (
     <View style={styles.container}>
-      <Button
-        title={recording ? "Stop Recording" : "Start Recording"}
-        onPress={recording ? stopRecording : handleStartRecording}
-        disabled={submissionStatus === "submitting"}
-      />
+      {!recording ? (
+        <View style={styles.container}>
+          <IconButton
+            icon="record-circle-outline"
+            iconColor={MD3Colors.error40}
+            size={100}
+            onPress={handleStartRecording}
+          />
+          <Text>Start Recording</Text>
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <IconButton
+            icon="stop-circle"
+            iconColor={MD3Colors.error40}
+            size={70}
+            onPress={stopRecording}
+          />
+          <Text>Stop Recording</Text>
+        </View>
+      )}
+
       {transcript && <Text>{transcript}</Text>}
     </View>
   );
 }
 
-{
-  /* <Transcript transcript={transcript} /> */
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
   },
 });
