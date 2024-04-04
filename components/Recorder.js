@@ -1,7 +1,7 @@
 import { Audio } from "expo-av";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { IconButton, MD3Colors } from "react-native-paper";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Text } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { sendAudioToBackend } from "../api";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
@@ -13,6 +13,7 @@ export default function Recorder() {
   const {
     recording,
     recordingUri,
+    setRecordingUri,
     startRecording,
     stopRecording,
     transcript,
@@ -20,6 +21,7 @@ export default function Recorder() {
   } = useAudioRecorder();
 
   const [submissionStatus, setSubmissionStatus] = useState("idle");
+  const [timer, setTimer] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -48,37 +50,73 @@ export default function Recorder() {
     submitRecording();
   }, [recordingUri]);
 
+  useEffect(() => {
+    let interval = null;
+
+    if (recording) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1);
+      }, 1000);
+    } else if (!recording) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [recording]);
+
   const handleStartRecording = () => {
     setSubmissionStatus("idle");
     setTranscript("");
     startRecording();
+    setTimer(0);
+  };
+
+  const formatTime = () => {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+
+    return `${minutes < 10 ? "0" : ""}${minutes}:${
+      seconds < 10 ? "0" : ""
+    }${seconds}`;
   };
 
   return (
     <View style={styles.container}>
       {!recording ? (
-        <View style={styles.container}>
-          <IconButton
-            icon="record-circle-outline"
-            iconColor={MD3Colors.error40}
-            size={100}
-            onPress={handleStartRecording}
-          />
-          <Text>Start Recording</Text>
+        <View>
+          <TouchableOpacity onPress={handleStartRecording}>
+            <Image
+              source={require("../assets/Microphone.png")}
+              style={styles.loginPic}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{ alignSelf: "center", fontWeight: "bold" }}
+            variant="titleMedium"
+          >
+            Press Button to Start Recording
+          </Text>
         </View>
       ) : (
-        <View style={styles.container}>
-          <IconButton
-            icon="stop-circle"
-            iconColor={MD3Colors.error40}
-            size={70}
-            onPress={stopRecording}
-          />
-          <Text>Stop Recording</Text>
+        <View>
+          <TouchableOpacity onPress={stopRecording}>
+            <Image
+              source={require("../assets/StopMicrophone.png")}
+              style={styles.loginPic}
+            />
+          </TouchableOpacity>
+          <Text style={{ alignSelf: "center", fontWeight: "bold" }}>
+            Press Button to Stop Recording
+          </Text>
+          <Text style={styles.timer}>Recording Time: {formatTime()}</Text>
         </View>
       )}
 
-      {transcript && <Text>{transcript}</Text>}
+      {transcript && (
+        <Text>
+          {transcript} | Duration {timer}
+        </Text>
+      )}
     </View>
   );
 }
@@ -88,5 +126,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  loginPic: {
+    width: 350,
+    height: 350,
+    alignSelf: "center",
+    marginBottom: -30,
+  },
+  timer: {
+    marginTop: 20,
+    fontSize: 18,
+    alignSelf: "center",
   },
 });

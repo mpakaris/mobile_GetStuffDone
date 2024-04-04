@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import * as React from "react";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { useSelector } from "react-redux";
 import EntrySummary from "./EntrySummary";
@@ -25,22 +25,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      {!user && (
-        <View style={styles.notLoggedInContainer}>
-          <View style={styles.notLoggedInInfoContainer}>
-            <Text variant="titleMedium" style={styles.notLoggedInText}>
-              It appears as you are not logged in.
-            </Text>
-            <Text variant="titleMedium" style={styles.notLoggedInText}>
-              You can still try our Journal AI, but you can't save your results.
-            </Text>
-            <Text variant="titleMedium" style={styles.notLoggedInText}>
-              Please log in or create an account to use all features.
-            </Text>
-          </View>
-        </View>
-      )}
-
+      {/* USER IS LOGGED IN */}
       {user && (
         <View>
           <View style={styles.loggedInContainer}>
@@ -54,8 +39,37 @@ const Home = () => {
               Tell me all the amazing stuff you have accomplished today!
             </Text>
           </View>
-          <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-            <EntrySummary item={lastUserEntry()} />
+          {entries.length !== 0 && (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+              <EntrySummary item={lastUserEntry()} />
+            </View>
+          )}
+          {entries.length === 0 && (
+            <Image
+              source={require("../assets/Welcome.png")}
+              style={styles.loginPic}
+            />
+          )}
+        </View>
+      )}
+
+      {/* USER IS NOT LOGGED IN */}
+      {!user && (
+        <View style={styles.notLoggedInContainer}>
+          <Image
+            source={require("../assets/NotLoggedIn.png")}
+            style={styles.loginPic}
+          />
+          <View style={styles.notLoggedInInfoContainer}>
+            <Text variant="titleMedium" style={styles.notLoggedInText}>
+              It appears as you are not logged in.
+            </Text>
+            <Text variant="titleMedium" style={styles.notLoggedInText}>
+              You can still try our Journal AI, but you can't save your results.
+            </Text>
+            <Text variant="titleMedium" style={styles.notLoggedInText}>
+              Please log in or create an account to use all features.
+            </Text>
           </View>
         </View>
       )}
@@ -68,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   loggedInContainer: {
-    backgroundColor: "orange",
+    backgroundColor: "#BC95C4",
     height: 300,
     marginTop: 0,
     borderRadius: 40,
@@ -86,38 +100,12 @@ const styles = StyleSheet.create({
     color: "white",
     paddingHorizontal: "10%",
   },
-  lastEntryContainer: {
-    backgroundColor: "brown",
-    marginTop: 20,
-    borderRadius: 20,
-    marginHorizontal: "4%",
-    paddingHorizontal: "10%",
-    paddingVertical: 20,
-  },
-  lastEntryContainerTitle: {
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "white",
-  },
-  listItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-    color: "white",
-  },
-  bulletPoint: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "white",
-    marginRight: 10,
-  },
   notLoggedInContainer: {
     flex: 1,
     justifyContent: "center",
   },
   notLoggedInInfoContainer: {
-    backgroundColor: "brown",
+    backgroundColor: "#BC95C4",
     borderRadius: 20,
     marginHorizontal: "4%",
     paddingHorizontal: "10%",
@@ -127,6 +115,13 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 20,
     textAlign: "center",
+  },
+  loginPic: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 15,
+    marginTop: 50,
   },
 });
 

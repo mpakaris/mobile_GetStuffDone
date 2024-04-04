@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useSelector } from "react-redux";
 import EntrySummary from "./EntrySummary";
@@ -12,10 +12,10 @@ const DatePicker = () => {
   const markedDates = entries.reduce((acc, entry) => {
     acc[entry.date] = {
       marked: true,
-      dotColor: "blue",
+      dotColor: "black",
       activeOpacity: 0,
       selected: true,
-      selectedColor: "lightblue",
+      selectedColor: "#BC95C4",
     };
     return acc;
   }, {});
@@ -27,6 +27,12 @@ const DatePicker = () => {
 
   return (
     <View style={styles.container}>
+      {!selectedDate && (
+        <Image
+          source={require("../assets/Calendar.png")}
+          style={styles.loginPic}
+        />
+      )}
       <Calendar
         onDayPress={onDayPress}
         markedDates={markedDates}
@@ -47,6 +53,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: "8%",
+  },
+  loginPic: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 15,
   },
 });
 

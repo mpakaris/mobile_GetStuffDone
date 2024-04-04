@@ -3,7 +3,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../firebaseConfig";
@@ -87,6 +87,10 @@ const Login = () => {
     <View style={styles.container}>
       {form === "login" && (
         <>
+          <Image
+            source={require("../assets/Login.png")}
+            style={styles.loginPic}
+          />
           <View style={styles.inputContainer}>
             <Text style={styles.title} variant="headlineSmall">
               Login
@@ -129,6 +133,10 @@ const Login = () => {
       {form === "register" && (
         <>
           <View>
+            <Image
+              source={require("../assets/Register.png")}
+              style={styles.loginPic}
+            />
             <Text style={styles.title} variant="headlineSmall">
               Register
             </Text>
@@ -189,6 +197,12 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     marginBottom: 10,
+  },
+  loginPic: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 15,
   },
 });
 

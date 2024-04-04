@@ -1,14 +1,15 @@
 import * as React from "react";
-import { BottomNavigation, Text } from "react-native-paper";
+import { BottomNavigation } from "react-native-paper";
 import AccountScreen from "./AccountScreen";
 import DatePicker from "./DatePicker";
 import Home from "./Home";
 import Recorder from "./Recorder";
+import Statistics from "./Statistics";
 
 const HomeRoute = () => <Home />;
 const JournalRoute = () => <DatePicker />;
 const RecordRoute = () => <Recorder />;
-const StatisticsRoute = () => <Text>Statistics</Text>;
+const StatisticsRoute = () => <Statistics />;
 const ProfileRoute = () => <AccountScreen />;
 
 const MyComponent = () => {
