@@ -3,19 +3,25 @@ import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { useSelector } from "react-redux";
+import EntrySummary from "./EntrySummary";
 
 const Home = () => {
   const user = useSelector((state) => state.user.userObject);
+  const entries = useSelector((state) => state.entries.userEntries);
   const currentDate = new Date();
   const formattedDate = format(currentDate, "dd-MM-yyyy");
 
-  const entries = [
-    "Ate a Hamburger",
-    "Went to the Gym",
-    "Finished big project",
-    "Walked the Dog",
-    "Shopping for the week",
-  ];
+  const lastUserEntry = () => {
+    if (!entries || entries.length === 0) return null;
+
+    const sortedEntries = [...entries].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+
+    return sortedEntries[0];
+  };
 
   return (
     <View style={styles.container}>
@@ -48,19 +54,8 @@ const Home = () => {
               Tell me all the amazing stuff you have accomplished today!
             </Text>
           </View>
-
-          <View style={styles.lastEntryContainer}>
-            <Text variant="bodyLarge" style={styles.lastEntryContainerTitle}>
-              Your Last Entry was on 02-04-2024
-            </Text>
-            {entries.map((entry, index) => (
-              <View key={index} style={styles.listItem}>
-                <View variant="titleLarge" style={styles.bulletPoint} />
-                <Text variant="titleMedium" style={styles.listItem}>
-                  {entry}
-                </Text>
-              </View>
-            ))}
+          <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+            <EntrySummary item={lastUserEntry()} />
           </View>
         </View>
       )}

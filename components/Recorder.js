@@ -2,10 +2,14 @@ import { Audio } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { IconButton, MD3Colors } from "react-native-paper";
+import { useSelector } from "react-redux";
 import { sendAudioToBackend } from "../api";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
 
 export default function Recorder() {
+  const user = useSelector((state) => state.user.userObject);
+  const entries = useSelector((state) => state.entries.userEntries);
+
   const {
     recording,
     recordingUri,
