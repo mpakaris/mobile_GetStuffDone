@@ -1,9 +1,12 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import "../firebaseConfig";
+import { auth } from "../firebaseConfig";
 import { setUser } from "../store/slices/userSlice";
 
 const Login = () => {
@@ -19,6 +22,8 @@ const Login = () => {
   const switchForm = (targetForm) => {
     setForm(targetForm);
     setError("");
+    setEmail("");
+    setPassword("");
   };
 
   const handleLogin = async () => {
@@ -27,16 +32,14 @@ const Login = () => {
       return;
     }
 
-    const auth = getAuth();
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const user = userCredential.user;
-      console.log(user);
 
+      const user = userCredential.user;
       dispatch(
         setUser({
           uid: user.uid,
@@ -60,16 +63,21 @@ const Login = () => {
       return;
     }
 
-    const auth = getAuth();
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+
       const user = userCredential.user;
-      onChangeLoggedInUser(user.email);
-      console.log(user);
+      dispatch(
+        setUser({
+          uid: user.uid,
+          email: user.email,
+          accessToken: user.accessToken,
+        })
+      );
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +113,7 @@ const Login = () => {
             mode="elevated"
             onPress={handleLogin}
           >
-            Login{" "}
+            Login
           </Button>
           <Button
             icon="account-plus"
@@ -120,7 +128,7 @@ const Login = () => {
 
       {form === "register" && (
         <>
-          <View style={styles.inputContainer}>
+          <View>
             <Text style={styles.title} variant="headlineSmall">
               Register
             </Text>
@@ -171,28 +179,16 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: "30px",
-  },
-  inputContainer: {
-    width: "80%",
-    alignItems: "center",
+  title: {
+    marginBottom: 20,
+    textAlign: "center",
+    fontWeight: "bold",
   },
   input: {
-    marginBottom: 10,
-    width: "100%",
-  },
-  title: {
-    marginBottom: "25px",
+    marginBottom: 20,
   },
   loginBtn: {
-    marginTop: "25px",
-  },
-  formSwitch: {
-    marginTop: "30px",
+    marginBottom: 10,
   },
 });
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
+import { Card, Text } from "react-native-paper";
 
 const DatePicker = () => {
   const [selectedDate, setSelectedDate] = useState("");
@@ -40,7 +41,20 @@ const DatePicker = () => {
           arrowColor: "#673AB7",
         }}
       />
-      {selectedDate && <Text>{selectedDate}</Text>}
+
+      {selectedDate && (
+        <Card style={{ marginTop: 10, backgroundColor: "white" }}>
+          <Card.Content>
+            <Text
+              variant="titleMedium"
+              style={{ fontWeight: "bold", marginBottom: 10 }}
+            >
+              Transcript:
+            </Text>
+            <Text variant="bodyLarge">{selectedDate}</Text>
+          </Card.Content>
+        </Card>
+      )}
     </View>
   );
 };
@@ -49,6 +63,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    paddingHorizontal: "8%",
   },
 });
 

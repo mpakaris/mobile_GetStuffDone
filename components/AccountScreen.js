@@ -1,15 +1,23 @@
 import React from "react";
-import { View } from "react-native";
-import { Divider } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
 import FormLogin from "./FormLogin";
-import FormRegister from "./FormRegister";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../store/slices/userSlice";
+import Settings from "./Settings";
 
 const AccountScreen = () => {
-  const userObject = useSelector((state) => state.user.userObject);
+  const user = useSelector((state) => state.user.userObject);
 
-  return <View>{userObject === null && <FormLogin />}</View>;
+  return (
+    <View style={styles.container}>{user ? <Settings /> : <FormLogin />}</View>
+  );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: "10%",
+  },
+});
 
 export default AccountScreen;
