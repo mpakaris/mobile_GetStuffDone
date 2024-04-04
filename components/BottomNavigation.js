@@ -4,12 +4,12 @@ import AccountScreen from "./AccountScreen";
 import DatePicker from "./DatePicker";
 import Home from "./Home";
 import Recorder from "./Recorder";
-import Statistics from "./Statistics";
+import Test from "./Test";
 
 const HomeRoute = () => <Home />;
 const JournalRoute = () => <DatePicker />;
 const RecordRoute = () => <Recorder />;
-const StatisticsRoute = () => <Statistics />;
+const StatisticsRoute = () => <Test />;
 const ProfileRoute = () => <AccountScreen />;
 
 const MyComponent = () => {

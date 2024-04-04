@@ -19,7 +19,9 @@
       "infoPlist": {
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["com.googleusercontent.apps.17898xxxxxx-xxxxxqhqj0exxxxxpl03xxx"]
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.17898xxxxxx-xxxxxqhqj0exxxxxpl03xxx"
+            ]
           }
         ]
       }
@@ -32,6 +34,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+      {
+        "fonts": ["node_modules/@expo-google-fonts/inter/Inter_100Thin.ttf"]
+      }
+      ]
+    ]
   }
 }

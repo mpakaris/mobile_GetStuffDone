@@ -34,6 +34,7 @@ export const useAudioRecorder = () => {
   return {
     recording,
     recordingUri,
+    setRecordingUri,
     startRecording,
     stopRecording,
     transcript,
