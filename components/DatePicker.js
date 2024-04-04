@@ -2,20 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Card, Text } from "react-native-paper";
+import { useSelector } from "react-redux";
 
 const DatePicker = () => {
-  const [selectedDate, setSelectedDate] = useState("");
-
-  const entries = [
-    { DateOfEntry: "2024-04-03", text: "Entry 1 text..." },
-    { DateOfEntry: "2024-04-15", text: "Entry 2 text..." },
-    { DateOfEntry: "2024-04-10", text: "Entry 3 text..." },
-    { DateOfEntry: "2024-04-08", text: "Entry 4 text..." },
-    { DateOfEntry: "2024-04-01", text: "Entry 5 text..." },
-  ];
+  const [selectedDate, setSelectedDate] = useState(null);
+  const entries = useSelector((state) => state.entries.userEntries);
 
   const markedDates = entries.reduce((acc, entry) => {
-    acc[entry.DateOfEntry] = {
+    acc[entry.date] = {
       marked: true,
       dotColor: "blue",
       activeOpacity: 0,
@@ -26,8 +20,15 @@ const DatePicker = () => {
   }, {});
 
   const onDayPress = (day) => {
-    const entry = entries.find((e) => e.DateOfEntry === day.dateString);
-    setSelectedDate(entry ? entry.text : "No Entry made on this date");
+    const entry = entries.find((e) => e.date === day.dateString);
+    setSelectedDate(entry ? entry : null);
+  };
+
+  const categoriesToString = (entryObject) => {
+    if (entryObject) {
+      return entryObject.join(", ");
+    }
+    return "";
   };
 
   return (
@@ -49,9 +50,25 @@ const DatePicker = () => {
               variant="titleMedium"
               style={{ fontWeight: "bold", marginBottom: 10 }}
             >
-              Transcript:
+              Transcript of {selectedDate.date}:
             </Text>
-            <Text variant="bodyLarge">{selectedDate}</Text>
+            {selectedDate.entry.map((e, index) => (
+              <View key={index} style={styles.listItem}>
+                <View variant="titleLarge" style={styles.bulletPoint} />
+                <Text variant="titleMedium" style={styles.listItem}>
+                  {e}
+                </Text>
+              </View>
+            ))}
+            <Text
+              variant="bodyLarge"
+              style={{ fontWeight: "bold", marginBottom: 6, marginTop: 20 }}
+            >
+              Categories:{" "}
+            </Text>
+            <Text variant="bodyLarge">
+              {categoriesToString(selectedDate.categories)}
+            </Text>
           </Card.Content>
         </Card>
       )}
@@ -64,6 +81,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: "8%",
+  },
+  bulletPoint: {
+    width: 7,
+    height: 7,
+    borderRadius: 5,
+    backgroundColor: "black",
+    marginRight: 10,
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+    color: "black",
   },
 });
 

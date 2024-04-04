@@ -39,7 +39,7 @@ const Home = () => {
         <View>
           <View style={styles.loggedInContainer}>
             <Text variant="headlineMedium" style={styles.title}>
-              Good Day, Niko!
+              Good Day, {user.email}!
             </Text>
             <Text variant="headlineSmall" style={styles.subTitle}>
               {formattedDate}
