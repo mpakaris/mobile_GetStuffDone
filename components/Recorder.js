@@ -1,4 +1,3 @@
-import { Audio } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
@@ -39,14 +38,14 @@ export default function Recorder() {
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, test.length);
 
-  useEffect(() => {
-    (async () => {
-      setTranscript(
-        "War Spazieren mit dem Hund, bin ins Fitnessstudio gegangen, war einkaufen und habe mein Auto gewaschen"
-      );
-      await Audio.requestPermissionsAsync();
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     setTranscript(
+  //       "War Spazieren mit dem Hund, bin ins Fitnessstudio gegangen, war einkaufen und habe mein Auto gewaschen"
+  //     );
+  //     await Audio.requestPermissionsAsync();
+  //   })();
+  // }, []);
 
   useEffect(() => {
     const submitRecording = async () => {
@@ -161,7 +160,7 @@ export default function Recorder() {
         <View>
           <TouchableOpacity onPress={stopRecording}>
             <Image
-              source={require("../assets/StopMicrophone.png")}
+              source={require("../assets/NotLoggedIn.png")}
               style={styles.loginPic}
             />
           </TouchableOpacity>

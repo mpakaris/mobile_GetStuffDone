@@ -1,26 +1,9 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
+import { StyleSheet, Text, View } from "react-native";
 
 const Settings = () => {
-  let [fontsLoaded, fontError] = useFonts({
-    Inter_900Black,
-  });
-
   return (
     <View style={styles.container}>
-      <Text style={{ fontFamily: "Inter-Black", fontSize: 30 }}>
-        Inter Black
-      </Text>
-      <Text
-        style={{
-          fontFamily: Platform.select({
-            android: "Inter_100Thin",
-            ios: "Inter-Thin",
-          }),
-        }}
-      >
-        Inter Black Referenz
-      </Text>
+      <Text style={{ fontSize: 30 }}>Inter Black</Text>
     </View>
   );
 };
