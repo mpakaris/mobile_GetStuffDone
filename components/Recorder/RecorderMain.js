@@ -40,11 +40,23 @@ export default function RecorderMain() {
   // Determine if the user has an entry for the current date
   const currentDate = new Date().toISOString().split("T")[0];
   const hasEntryToday = entries.some((entry) => {
-    if (entry.timestamp && entry.timestamp instanceof Date) {
-      return entry.timestamp.toISOString().split("T")[0] === currentDate;
+    if (entry.timestamp) {
+      // Split the timestamp at "T" to isolate the date part
+      const entryDate = entry.timestamp.split("T")[0];
+      return entryDate === currentDate;
     }
     return false;
   });
+
+  const getTodaysEntry = () => {
+    const currentDate = new Date().toISOString().split("T")[0];
+
+    if (entries) {
+      return entries.find((entry) => {
+        return entry.timestamp && entry.timestamp.split("T")[0] === currentDate;
+      });
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -56,10 +68,15 @@ export default function RecorderMain() {
     }
 
     if (user && hasEntryToday) {
+      const todaysEntry = getTodaysEntry();
+
+      if (todaysEntry) {
+        setTranscript(todaysEntry.results || "");
+        setStructuredResult(todaysEntry.structuredResults || []);
+      }
+
       setStatus("hasUserAndHasEntryToday");
       setNextStep("canDeleteFromDB");
-      // setTranscript();
-      // setStructuredResults();
     }
   }, [user, hasEntryToday]);
 
@@ -171,49 +188,59 @@ export default function RecorderMain() {
         onAnalyze={analyzeWithAi}
       />
 
-      {nextStep === "canSaveInDB" && !recording && (
-        <View style={styles.container}>
-          <Text
-            variant="titleLarge"
-            style={{ textAlign: "start", textAlign: "left", marginBottom: 10 }}
-          >
-            Your Accomplishments Today:
-          </Text>
-          <SafeAreaView style={styles.listContainer}>
-            <FlatList
-              data={structuredResult}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => <StructuredResultCard item={item} />}
-            />
-            <View style={styles.buttonContainer}>
-              <Button
-                mode="contained"
-                onPress={onDeleteStructuredResults}
-                style={styles.button}
-              >
-                Delete Entry
-              </Button>
-              {status === "hasUser" && (
-                <Button
-                  mode="contained"
-                  onPress={onSaveToDB}
-                  style={styles.button}
-                >
-                  Save Entry
-                </Button>
-              )}
-            </View>
-          </SafeAreaView>
-        </View>
-      )}
+      {(nextStep === "canSaveInDB" || nextStep === "canDeleteFromDB") &&
+        !recording && (
+          <View style={styles.container}>
+            <Text
+              variant="titleLarge"
+              style={{
+                textAlign: "start",
+                textAlign: "left",
+                marginBottom: 10,
+              }}
+            >
+              Your Accomplishments Today:
+            </Text>
+            <SafeAreaView style={styles.listContainer}>
+              <FlatList
+                data={structuredResult}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => <StructuredResultCard item={item} />}
+              />
+              <View style={styles.buttonContainer}>
+                {nextStep === "canSaveInDB" && (
+                  <Button
+                    mode="contained"
+                    onPress={onDeleteStructuredResults}
+                    style={styles.button}
+                  >
+                    Delete Entry
+                  </Button>
+                )}
 
-      {nextStep === "canDeleteFromDB" && !recording && (
-        <View>
-          <Button mode="contained" onPress={onDeleteStructuredResults}>
-            Delete Entry from DB
-          </Button>
-        </View>
-      )}
+                {nextStep === "canDeleteFromDB" && !recording && (
+                  <Button
+                    mode="contained"
+                    style={styles.button}
+                    onPress={onDeleteStructuredResults}
+                  >
+                    Delete Entry from DB
+                  </Button>
+                )}
+
+                {status === "hasUser" && (
+                  <Button
+                    mode="contained"
+                    onPress={onSaveToDB}
+                    style={styles.button}
+                  >
+                    Save Entry
+                  </Button>
+                )}
+              </View>
+            </SafeAreaView>
+          </View>
+        )}
 
       {status === "hasNoUser" && (
         <Text
@@ -229,9 +256,13 @@ export default function RecorderMain() {
           Info: {"\n"}
           It appears you are not logged in! {"\n"}
           You may record an entry and analyze it with AI. {"\n"}
-          To save your Entry in the Database, please log in..
+          To save your Entry in the Database, please log in.{"\n"}
         </Text>
       )}
+      {/* <Text> {JSON.stringify(status)}</Text>
+      <Text> {JSON.stringify(hasEntryToday)}</Text>
+      <Text> {JSON.stringify(transcript)}</Text>
+      <Text> {JSON.stringify(structuredResult)}</Text> */}
     </View>
   );
 }
