@@ -9,9 +9,10 @@ import {
   Text,
 } from "react-native-paper";
 import { useSelector } from "react-redux";
-import { analyzeTranscript, sendAudioToBackend } from "../api";
-import { useAudioRecorder } from "../hooks/useAudioRecorder";
-import Spinner from "./Spinner";
+import { analyzeTranscript, sendAudioToBackend } from "../../api";
+import { saveDailyEntry } from "../../api/firebase";
+import { useAudioRecorder } from "../../hooks/useAudioRecorder";
+import Spinner from "../Spinner";
 
 export default function Recorder() {
   const user = useSelector((state) => state.user.userObject);
@@ -37,15 +38,6 @@ export default function Recorder() {
 
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, test.length);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     setTranscript(
-  //       "War Spazieren mit dem Hund, bin ins Fitnessstudio gegangen, war einkaufen und habe mein Auto gewaschen"
-  //     );
-  //     await Audio.requestPermissionsAsync();
-  //   })();
-  // }, []);
 
   useEffect(() => {
     const submitRecording = async () => {
@@ -119,6 +111,19 @@ export default function Recorder() {
     setIsSending(false);
   };
 
+  const saveInDB = async () => {
+    setIsVisible(false);
+    setIsSending(true);
+
+    try {
+      const response = await saveDailyEntry(user.uid, transcript, test);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setIsSending(false);
+  };
+
   return (
     <View style={styles.container}>
       {!recording && transcript === "" && !isSending && (
@@ -179,7 +184,7 @@ export default function Recorder() {
       )}
 
       {test.length > 0 && (
-        <View>
+        <View style={{ marginHorizontal: "5px" }}>
           <DataTable>
             <DataTable.Header>
               <DataTable.Title style={{ flex: 2 }}>Activity</DataTable.Title>
@@ -219,11 +224,7 @@ export default function Recorder() {
             >
               Delete
             </Button>
-            <Button
-              mode="contained"
-              style={styles.tableBtn}
-              onPress={analyzeWithAi}
-            >
+            <Button mode="contained" style={styles.tableBtn} onPress={saveInDB}>
               Save in DB
             </Button>
           </View>

@@ -3,7 +3,7 @@ import * as React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { useSelector } from "react-redux";
-import EntrySummary from "./EntrySummary";
+// import EntrySummary from "./EntrySummary";
 
 const Home = () => {
   const user = useSelector((state) => state.user.userObject);
@@ -41,7 +41,8 @@ const Home = () => {
           </View>
           {entries.length !== 0 && (
             <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-              <EntrySummary item={lastUserEntry()} />
+              {/* <EntrySummary item={lastUserEntry()} /> */}
+              <Text>{JSON.stringify(entries)}</Text>
             </View>
           )}
           {entries.length === 0 && (

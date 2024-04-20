@@ -1,18 +1,33 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { BottomNavigation } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEntriesFromDB } from "../store/slices/entriesSlice";
 import AccountScreen from "./AccountScreen";
 import DatePicker from "./DatePicker";
 import Home from "./Home";
-import Recorder from "./Recorder";
+import RecorderMain from "./Recorder/RecorderMain";
 import Test from "./Test";
 
 const HomeRoute = () => <Home />;
 const JournalRoute = () => <DatePicker />;
-const RecordRoute = () => <Recorder />;
+const RecordRoute = () => <RecorderMain />;
 const StatisticsRoute = () => <Test />;
 const ProfileRoute = () => <AccountScreen />;
 
 const MyComponent = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.userObject);
+  const entriesStatus = useSelector((state) => state.entries.status);
+  const entriesError = useSelector((state) => state.entries.error);
+
+  //Fetch entries from DB
+  useEffect(() => {
+    // Check if the user object exists and has a uid before dispatching
+    if (user && user.uid && entriesStatus === "idle") {
+      dispatch(fetchEntriesFromDB(user.uid));
+    }
+  }, [user, dispatch, entriesStatus]);
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
