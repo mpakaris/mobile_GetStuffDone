@@ -239,6 +239,24 @@ export default function RecorderMain() {
                 )}
               </View>
             </SafeAreaView>
+
+            {nextStep === "canDeleteFromDB" && !recording && (
+              <Text
+                variant="bodyMedium"
+                style={{
+                  color: "darkred",
+                  marginTop: 20,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginBottom: 30,
+                }}
+              >
+                Info: {"\n"}
+                An Entry for today already exists. {"\n"}
+                If you want to change your Entry,{"\n"} first delete the
+                existing one.
+              </Text>
+            )}
           </View>
         )}
 
