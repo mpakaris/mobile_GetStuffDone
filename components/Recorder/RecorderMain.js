@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
+import { Button, Text } from "react-native-paper";
 import { useSelector } from "react-redux";
 import {
   analyzeTranscript,
   saveDailyEntry,
   sendAudioToBackend,
-} from "../../api";
+} from "../../api/firebase.js";
 import { useAudioRecorder } from "../../hooks/useAudioRecorder";
 import Spinner from "../Spinner.js";
 import ModalDialog from "./ModalDialog";
 import RecorderButton from "./RecorderButton";
 import RecordingTimer from "./RecordingTimer";
+import StructuredResultCard from "./StructuredResultCard.js";
 import TranscriptBox from "./TranscriptBox";
 
 export default function RecorderMain() {
@@ -28,8 +30,38 @@ export default function RecorderMain() {
 
   const [isSending, setIsSending] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [test, setTest] = useState([]);
+  const [structuredResult, setStructuredResult] = useState([]);
   const [timer, setTimer] = useState(0);
+
+  // Dashboard Controls:
+  const [status, setStatus] = useState("");
+  const [nextStep, setNextStep] = useState("canRecord"); // *canRecord* *canAnalyze* *canSaveInDB* *canDeleteFromDB*
+
+  // Determine if the user has an entry for the current date
+  const currentDate = new Date().toISOString().split("T")[0];
+  const hasEntryToday = entries.some((entry) => {
+    if (entry.timestamp && entry.timestamp instanceof Date) {
+      return entry.timestamp.toISOString().split("T")[0] === currentDate;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (user) {
+      setStatus("hasUser");
+    }
+
+    if (!user) {
+      setStatus("hasNoUser");
+    }
+
+    if (user && hasEntryToday) {
+      setStatus("hasUserAndHasEntryToday");
+      setNextStep("canDeleteFromDB");
+      // setTranscript();
+      // setStructuredResults();
+    }
+  }, [user, hasEntryToday]);
 
   useEffect(() => {
     if (recordingUri) {
@@ -54,6 +86,7 @@ export default function RecorderMain() {
     try {
       const response = await sendAudioToBackend(recordingUri);
       setTranscript(response);
+      setNextStep("canAnalyze");
     } catch (error) {
       console.error("Error sending audio to backend:", error);
     }
@@ -65,55 +98,69 @@ export default function RecorderMain() {
     setIsVisible(false);
     try {
       const response = await analyzeTranscript(transcript);
-      setTest(JSON.parse(response.message.content));
-      setTranscript("");
+      setStructuredResult(JSON.parse(response.message.content));
+      setNextStep("canSaveInDB");
     } catch (error) {
       console.error("Error analyzing transcript:", error);
     }
     setIsSending(false);
   };
 
-  const saveInDB = async () => {
+  const onSaveToDB = async () => {
     setIsSending(true);
+
+    // Make Sure that only loggedIn User can save:
+    if (status === "hasNoUser") return;
+
     try {
-      await saveDailyEntry(user.uid, transcript, test);
+      await saveDailyEntry(user.uid, transcript, structuredResult);
     } catch (error) {
       console.error("Error saving entry to DB:", error);
     }
     setIsSending(false);
+    // setTranscript("");
+    // setStructuredResult([]);
+    setNextStep(canRecord);
+  };
+
+  const onDeleteStructuredResults = () => {
+    setStructuredResult([]);
+    setTranscript("");
+    setNextStep("canRecord");
   };
 
   if (isSending) {
     return <Spinner />;
   }
 
-  const formatDuration = () => {
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    return `${minutes < 10 ? "0" : ""}${minutes}:${
-      seconds < 10 ? "0" : ""
-    }${seconds}`;
-  };
-
   return (
     <View style={styles.container}>
-      <RecorderButton
-        isRecording={recording}
-        onStartRecording={() => {
-          setTranscript("");
-          setTimer(0);
-          startRecording();
-        }}
-        onStopRecording={stopRecording}
-      />
+      {nextStep === "canRecord" &&
+        transcript == "" &&
+        structuredResult.length === 0 && (
+          <RecorderButton
+            isRecording={recording}
+            onStartRecording={() => {
+              setTranscript("");
+              setStructuredResult([]);
+              setTimer(0);
+              startRecording();
+            }}
+            onStopRecording={stopRecording}
+          />
+        )}
 
-      {recording && <RecordingTimer timer={timer} />}
+      {nextStep === "canRecord" && recording && (
+        <RecordingTimer timer={timer} />
+      )}
 
-      {transcript !== "" && (
+      {nextStep === "canAnalyze" && !recording && (
         <TranscriptBox
           transcript={transcript}
           duration={timer}
-          onDelete={() => setTranscript("")}
+          onDelete={() => {
+            setTranscript(""), setNextStep("canRecord");
+          }}
           onAnalyze={() => setIsVisible(true)}
         />
       )}
@@ -123,6 +170,68 @@ export default function RecorderMain() {
         onDismiss={() => setIsVisible(false)}
         onAnalyze={analyzeWithAi}
       />
+
+      {nextStep === "canSaveInDB" && !recording && (
+        <View style={styles.container}>
+          <Text
+            variant="titleLarge"
+            style={{ textAlign: "start", textAlign: "left", marginBottom: 10 }}
+          >
+            Your Accomplishments Today:
+          </Text>
+          <SafeAreaView style={styles.listContainer}>
+            <FlatList
+              data={structuredResult}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => <StructuredResultCard item={item} />}
+            />
+            <View style={styles.buttonContainer}>
+              <Button
+                mode="contained"
+                onPress={onDeleteStructuredResults}
+                style={styles.button}
+              >
+                Delete Entry
+              </Button>
+              {status === "hasUser" && (
+                <Button
+                  mode="contained"
+                  onPress={onSaveToDB}
+                  style={styles.button}
+                >
+                  Save Entry
+                </Button>
+              )}
+            </View>
+          </SafeAreaView>
+        </View>
+      )}
+
+      {nextStep === "canDeleteFromDB" && !recording && (
+        <View>
+          <Button mode="contained" onPress={onDeleteStructuredResults}>
+            Delete Entry from DB
+          </Button>
+        </View>
+      )}
+
+      {status === "hasNoUser" && (
+        <Text
+          variant="bodyMedium"
+          style={{
+            color: "darkred",
+            marginTop: 20,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 30,
+          }}
+        >
+          Info: {"\n"}
+          It appears you are not logged in! {"\n"}
+          You may record an entry and analyze it with AI. {"\n"}
+          To save your Entry in the Database, please log in..
+        </Text>
+      )}
     </View>
   );
 }
@@ -132,5 +241,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  listContainer: {
+    flexGrow: 0, // Prevents the FlatList container from growing
+    width: "90%",
+    paddingHorizontal: 5,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 30,
+    width: "100%",
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 10,
   },
 });

@@ -7,6 +7,7 @@ export const fetchEntriesFromDB = createAsyncThunk(
   async (uid, thunkAPI) => {
     try {
       const entries = await getAllEntriesOfUser(uid);
+      console.log(JSON.stringify(entries));
       return entries;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

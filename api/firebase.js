@@ -1,6 +1,6 @@
 import {
-  EmailAuthProvider,
   deleteUser,
+  EmailAuthProvider,
   getAuth,
   reauthenticateWithCredential,
 } from "firebase/auth";
@@ -12,33 +12,61 @@ import {
   getDocs,
   query,
   setDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
+// export const getAllEntriesOfUser = async (uid) => {
+//   if (uid) {
+//     const userEntriesRef = collection(db, uid);
+//     const q = query(userEntriesRef);
+//     try {
+//       const querySnapshot = await getDocs(q);
+//       const entries = [];
+
+//       querySnapshot.forEach((doc) => {
+//         entries.push({ id: doc.id, ...doc.data() });
+//       });
+
+//       return entries;
+//     } catch (error) {
+//       console.error("Error getting documents: ", error);
+//       return [];
+//     }
+//   }
+// };
+
 export const getAllEntriesOfUser = async (uid) => {
-  if (uid) {
-    const userEntriesRef = collection(db, uid);
-    const q = query(userEntriesRef);
-    try {
-      const querySnapshot = await getDocs(q);
-      const entries = [];
+  if (!uid) return [];
 
-      querySnapshot.forEach((doc) => {
-        entries.push({ id: doc.id, ...doc.data() });
-      });
+  const userEntriesRef = collection(db, uid);
+  const q = query(userEntriesRef);
 
-      return entries;
-    } catch (error) {
-      console.error("Error getting documents: ", error);
-      return [];
-    }
+  try {
+    const querySnapshot = await getDocs(q);
+    const entries = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      // Convert the Timestamp to a JavaScript Date object, then to ISO string
+      if (data.timestamp && typeof data.timestamp.toDate === "function") {
+        data.timestamp = data.timestamp.toDate().toISOString();
+      }
+
+      entries.push({ id: doc.id, ...data });
+    });
+
+    return entries;
+  } catch (error) {
+    console.error("Error getting documents: ", error);
+    return [];
   }
 };
 
 export const saveDailyEntry = async (userId, results, structuredResults) => {
   const today = new Date().toISOString().split("T")[0];
   const entry = {
-    timestamp: new Date(),
+    timestamp: Timestamp.fromDate(new Date()),
     results: results,
     structuredResults: structuredResults,
   };

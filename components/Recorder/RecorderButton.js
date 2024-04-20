@@ -14,15 +14,15 @@ const RecorderButton = ({ isRecording, onStartRecording, onStopRecording }) => {
   return (
     <TouchableOpacity onPress={handlePress}>
       <Image source={imageSource} style={styles.buttonImage} />
-      <Text style={{ textAlign: "center" }}>{userAction}</Text>
+      <Text style={{ textAlign: "center", marginTop: -60 }}>{userAction}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   buttonImage: {
-    width: 300, // Set the width as needed
-    height: 300, // Set the height as needed
+    width: 400,
+    height: 400,
     alignSelf: "center",
   },
 });

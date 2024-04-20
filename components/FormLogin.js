@@ -3,7 +3,8 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import React, { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../firebaseConfig";
@@ -84,7 +85,14 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      viewIsInsideTabBar={false}
+      extraScrollHeight={Platform.OS === "android" ? 60 : 100}
+      enableOnAndroid={true}
+      scrollEnabled={true}
+    >
       {form === "login" && (
         <>
           <Image
@@ -182,11 +190,21 @@ const Login = () => {
           </View>
         </>
       )}
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: "5%",
+  },
+  contentContainer: {
+    flexGrow: 1, // Allows the container to grow to fit content, necessary for centering
+    justifyContent: "center", // Center content vertically
+    alignItems: "center", // Center content horizontally
+  },
   title: {
     marginBottom: 20,
     textAlign: "center",
@@ -194,13 +212,16 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 20,
+    width: 300,
   },
   loginBtn: {
     marginBottom: 10,
+    width: 200,
+    alignSelf: "center",
   },
   loginPic: {
-    width: 250,
-    height: 250,
+    width: 200,
+    height: 200,
     alignSelf: "center",
     marginBottom: 15,
   },
