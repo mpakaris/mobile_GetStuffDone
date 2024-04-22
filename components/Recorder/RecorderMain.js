@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
-import { useSelector } from "react-redux";
-import {
-  analyzeTranscript,
-  saveDailyEntry,
-  sendAudioToBackend,
-} from "../../api";
+import { useDispatch, useSelector } from "react-redux";
+import { analyzeTranscript, sendAudioToBackend } from "../../api";
+import { deleteUserEntryByDate, saveDailyEntry } from "../../api/firebase.js";
 import { useAudioRecorder } from "../../hooks/useAudioRecorder";
+import { fetchEntriesFromDB } from "../../store/slices/entriesSlice.js";
+import DeleteEntryDialog from "../Calendar/DeleteEntryDialog.js";
 import Spinner from "../Spinner.js";
 import ModalDialog from "./ModalDialog";
 import RecorderButton from "./RecorderButton";
@@ -18,6 +17,7 @@ import TranscriptBox from "./TranscriptBox";
 export default function RecorderMain() {
   const user = useSelector((state) => state.user.userObject);
   const entries = useSelector((state) => state.entries.userEntries);
+  const dispatch = useDispatch();
 
   const {
     recording,
@@ -32,6 +32,7 @@ export default function RecorderMain() {
   const [isVisible, setIsVisible] = useState(false);
   const [structuredResult, setStructuredResult] = useState([]);
   const [timer, setTimer] = useState(0);
+  const [showDialog, setShowDialog] = useState(false);
 
   // Dashboard Controls:
   const [status, setStatus] = useState("");
@@ -130,14 +131,15 @@ export default function RecorderMain() {
     if (status === "hasNoUser") return;
 
     try {
-      await saveDailyEntry(user.uid, transcript, structuredResult);
+      await saveDailyEntry(user.uid, transcript, structuredResult, timer);
+      dispatch(fetchEntriesFromDB(user.uid));
     } catch (error) {
       console.error("Error saving entry to DB:", error);
     }
     setIsSending(false);
-    // setTranscript("");
-    // setStructuredResult([]);
-    setNextStep(canRecord);
+    setTranscript("");
+    setStructuredResult([]);
+    setNextStep("canDeleteFromDB");
   };
 
   const onDeleteStructuredResults = () => {
@@ -149,6 +151,24 @@ export default function RecorderMain() {
   if (isSending) {
     return <Spinner />;
   }
+
+  const deleteEntryFromDatabase = async () => {
+    if (!user) return;
+
+    try {
+      setIsSending(true);
+      const response = await deleteUserEntryByDate(
+        user.uid,
+        getTodaysEntry().id
+      );
+      setNextStep("canRecord");
+    } catch (error) {
+      console.log(error);
+    }
+
+    isSending(false);
+    setShowDialog(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -171,7 +191,7 @@ export default function RecorderMain() {
         <RecordingTimer timer={timer} />
       )}
 
-      {nextStep === "canAnalyze" && !recording && (
+      {nextStep === "canAnalyze" && !recording && !hasEntryToday && (
         <TranscriptBox
           transcript={transcript}
           duration={timer}
@@ -219,13 +239,20 @@ export default function RecorderMain() {
                 )}
 
                 {nextStep === "canDeleteFromDB" && !recording && (
-                  <Button
-                    mode="contained"
-                    style={styles.button}
-                    onPress={onDeleteStructuredResults}
-                  >
-                    Delete Entry from DB
-                  </Button>
+                  <>
+                    <Button
+                      mode="contained"
+                      style={styles.button}
+                      onPress={() => setShowDialog(true)}
+                    >
+                      Delete Entry from DB
+                    </Button>
+                    <DeleteEntryDialog
+                      onDelete={deleteEntryFromDatabase}
+                      onDismiss={() => setShowDialog(false)}
+                      isVisible={showDialog}
+                    />
+                  </>
                 )}
 
                 {status === "hasUser" && (
@@ -277,10 +304,10 @@ export default function RecorderMain() {
           To save your Entry in the Database, please log in.{"\n"}
         </Text>
       )}
-      {/* <Text> {JSON.stringify(status)}</Text>
-      <Text> {JSON.stringify(hasEntryToday)}</Text>
-      <Text> {JSON.stringify(transcript)}</Text>
-      <Text> {JSON.stringify(structuredResult)}</Text> */}
+
+      {/* <Text> {JSON.stringify(hasEntryToday)}</Text>
+      <Text> {status}</Text>
+      <Text> {nextStep}</Text> */}
     </View>
   );
 }

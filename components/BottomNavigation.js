@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { BottomNavigation } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import DatePicker from "../components/Calendar/DatePicker";
+import StatisticsDashboard from "../components/Statistics/StatisticsDashboard";
 import { fetchEntriesFromDB } from "../store/slices/entriesSlice";
-import AccountScreen from "./AccountScreen";
+import AccountScreen from "./Account/AccountScreen";
 import Home from "./Home";
 import RecorderMain from "./Recorder/RecorderMain";
-import Test from "./Test";
 
 const HomeRoute = () => <Home />;
 const JournalRoute = () => <DatePicker />;
 const RecordRoute = () => <RecorderMain />;
-const StatisticsRoute = () => <Test />;
+const StatisticsRoute = () => <StatisticsDashboard />;
 const ProfileRoute = () => <AccountScreen />;
 
 const MyComponent = () => {

@@ -63,12 +63,18 @@ export const getAllEntriesOfUser = async (uid) => {
   }
 };
 
-export const saveDailyEntry = async (userId, results, structuredResults) => {
+export const saveDailyEntry = async (
+  userId,
+  results,
+  structuredResults,
+  timer
+) => {
   const today = new Date().toISOString().split("T")[0];
   const entry = {
     timestamp: Timestamp.fromDate(new Date()),
     results: results,
     structuredResults: structuredResults,
+    rectime: timer,
   };
 
   const docRef = doc(db, userId, today);

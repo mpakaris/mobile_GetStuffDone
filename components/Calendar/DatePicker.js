@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   containerDailyEntry: {
     alignItems: "center",
     width: "100%",
-    marginTop: 80,
+    marginTop: 60,
   },
   listContainer: {
     width: "100%",

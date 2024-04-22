@@ -7,8 +7,8 @@ import { Image, Platform, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { auth } from "../firebaseConfig";
-import { setUser } from "../store/slices/userSlice";
+import { auth } from "../../firebaseConfig";
+import { setUser } from "../../store/slices/userSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -96,7 +96,7 @@ const Login = () => {
       {form === "login" && (
         <>
           <Image
-            source={require("../assets/Login.png")}
+            source={require("../../assets/Login.png")}
             style={styles.loginPic}
           />
           <View style={styles.inputContainer}>
@@ -142,7 +142,7 @@ const Login = () => {
         <>
           <View>
             <Image
-              source={require("../assets/Register.png")}
+              source={require("../../assets/Register.png")}
               style={styles.loginPic}
             />
             <Text style={styles.title} variant="headlineSmall">
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingHorizontal: "5%",
+    width: "100%",
   },
   contentContainer: {
     flexGrow: 1, // Allows the container to grow to fit content, necessary for centering

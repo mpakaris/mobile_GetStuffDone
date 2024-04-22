@@ -7,7 +7,7 @@ const Settings = () => {
   const user = useSelector((state) => state.user.userObject);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Card>
         <Card.Title
           title="Profile Settings"
