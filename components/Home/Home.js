@@ -47,7 +47,7 @@ const Home = () => {
           )}
           {entries.length === 0 && (
             <Image
-              source={require("../assets/Welcome.png")}
+              source={require("../../assets/Welcome.png")}
               style={styles.loginPic}
             />
           )}
@@ -58,7 +58,7 @@ const Home = () => {
       {!user && (
         <View style={styles.notLoggedInContainer}>
           <Image
-            source={require("../assets/NotLoggedIn.png")}
+            source={require("../../assets/NotLoggedIn.png")}
             style={styles.loginPic}
           />
           <View style={styles.notLoggedInInfoContainer}>

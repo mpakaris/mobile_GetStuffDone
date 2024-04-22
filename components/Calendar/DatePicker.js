@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUserEntryByDate } from "../../api/firebase";
 import { createMockEntries } from "../../hooks/DatePickerMockData";
 import { fetchEntriesFromDB } from "../../store/slices/entriesSlice";
+import Spinner from "../General/Spinner";
 import StructuredResultCard from "../Recorder/StructuredResultCard";
-import Spinner from "../Spinner";
 import DeleteEntryDialog from "./DeleteEntryDialog";
 
 const DatePicker = () => {

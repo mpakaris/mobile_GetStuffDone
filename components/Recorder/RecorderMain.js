@@ -7,7 +7,7 @@ import { deleteUserEntryByDate, saveDailyEntry } from "../../api/firebase.js";
 import { useAudioRecorder } from "../../hooks/useAudioRecorder";
 import { fetchEntriesFromDB } from "../../store/slices/entriesSlice.js";
 import DeleteEntryDialog from "../Calendar/DeleteEntryDialog.js";
-import Spinner from "../Spinner.js";
+import Spinner from "../General/Spinner.js";
 import ModalDialog from "./ModalDialog";
 import RecorderButton from "./RecorderButton";
 import RecordingTimer from "./RecordingTimer";

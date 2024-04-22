@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { BottomNavigation } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import DatePicker from "../components/Calendar/DatePicker";
-import StatisticsDashboard from "../components/Statistics/StatisticsDashboard";
-import { fetchEntriesFromDB } from "../store/slices/entriesSlice";
-import AccountScreen from "./Account/AccountScreen";
-import Home from "./Home";
-import RecorderMain from "./Recorder/RecorderMain";
+import DatePicker from "../Calendar/DatePicker";
+import StatisticsDashboard from "../Statistics/StatisticsDashboard";
+import { fetchEntriesFromDB } from "../../store/slices/entriesSlice";
+import AccountScreen from "../Account/AccountScreen";
+import Home from "../Home/Home";
+import RecorderMain from "../Recorder/RecorderMain";
 
 const HomeRoute = () => <Home />;
 const JournalRoute = () => <DatePicker />;
