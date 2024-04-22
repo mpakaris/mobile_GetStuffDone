@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Button, Text } from "react-native-paper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteUserEntryByDate } from "../../api/firebase";
 import { createMockEntries } from "../../hooks/DatePickerMockData";
+import { fetchEntriesFromDB } from "../../store/slices/entriesSlice";
 import StructuredResultCard from "../Recorder/StructuredResultCard";
 import Spinner from "../Spinner";
 import DeleteEntryDialog from "./DeleteEntryDialog";
@@ -24,6 +25,7 @@ const DatePicker = () => {
 
   const user = useSelector((state) => state.user.userObject);
   const userEntries = useSelector((state) => state.entries.userEntries);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setEntries(user ? userEntries : mockEntries);
@@ -64,6 +66,7 @@ const DatePicker = () => {
     try {
       setIsSending(true);
       const response = await deleteUserEntryByDate(user.uid, selectedDate.id);
+      dispatch(fetchEntriesFromDB(user.uid));
     } catch (error) {
       console.log(error);
     }
