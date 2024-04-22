@@ -6,7 +6,7 @@ import {
   analyzeTranscript,
   saveDailyEntry,
   sendAudioToBackend,
-} from "../../api/firebase.js";
+} from "../../api";
 import { useAudioRecorder } from "../../hooks/useAudioRecorder";
 import Spinner from "../Spinner.js";
 import ModalDialog from "./ModalDialog";

@@ -66,10 +66,12 @@ const Home = () => {
               It appears as you are not logged in.
             </Text>
             <Text variant="titleMedium" style={styles.notLoggedInText}>
-              You can still try our Journal AI, but you can't save your results.
+              You can still try our Journal AI, {"\n"}
+              but you can't save your results.
             </Text>
             <Text variant="titleMedium" style={styles.notLoggedInText}>
-              Please log in or create an account to use all features.
+              Please log in or create an account {"\n"}
+              to use all features.
             </Text>
           </View>
         </View>

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { BottomNavigation } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
+import DatePicker from "../components/Calendar/DatePicker";
 import { fetchEntriesFromDB } from "../store/slices/entriesSlice";
 import AccountScreen from "./AccountScreen";
-import DatePicker from "./DatePicker";
 import Home from "./Home";
 import RecorderMain from "./Recorder/RecorderMain";
 import Test from "./Test";
