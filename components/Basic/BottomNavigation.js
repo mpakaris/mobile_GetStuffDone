@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { BottomNavigation } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import DatePicker from "../Calendar/DatePicker";
-import StatisticsDashboard from "../Statistics/StatisticsDashboard";
 import { fetchEntriesFromDB } from "../../store/slices/entriesSlice";
 import AccountScreen from "../Account/AccountScreen";
+import DatePicker from "../Calendar/DatePicker";
 import Home from "../Home/Home";
 import RecorderMain from "../Recorder/RecorderMain";
+import StatisticsDashboard from "../Statistics/StatisticsDashboard";
+import DisplayTop from "./DisplayTop";
 
 const HomeRoute = () => <Home />;
 const JournalRoute = () => <DatePicker />;
@@ -71,11 +72,14 @@ const MyComponent = () => {
   });
 
   return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-    />
+    <>
+      <DisplayTop pageName={routes[index].title} />
+      <BottomNavigation
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+      />
+    </>
   );
 };
 

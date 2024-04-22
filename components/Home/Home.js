@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import * as React from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Card, Text } from "react-native-paper";
 import { useSelector } from "react-redux";
 // import EntrySummary from "./EntrySummary";
 
@@ -27,31 +27,43 @@ const Home = () => {
     <View style={styles.container}>
       {/* USER IS LOGGED IN */}
       {user && (
-        <View>
-          <View style={styles.loggedInContainer}>
-            <Text variant="headlineMedium" style={styles.title}>
-              Good Day, {user.email}!
-            </Text>
-            <Text variant="headlineSmall" style={styles.subTitle}>
-              {formattedDate}
-            </Text>
-            <Text variant="headlineSmall" style={styles.subTitle}>
-              Tell me all the amazing stuff you have accomplished today!
-            </Text>
-          </View>
-          {entries.length !== 0 && (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-              {/* <EntrySummary item={lastUserEntry()} /> */}
-              <Text>{JSON.stringify(entries)}</Text>
-            </View>
-          )}
-          {entries.length === 0 && (
-            <Image
+        // <View>
+        //   <View style={styles.loggedInContainer}>
+        //     <Text variant="headlineMedium" style={styles.title}>
+        //       Good Day, {user.email}!
+        //     </Text>
+        //     <Text variant="headlineSmall" style={styles.subTitle}>
+        //       {formattedDate}
+        //     </Text>
+        //     <Text variant="headlineSmall" style={styles.subTitle}>
+        //       Tell me all the amazing stuff you have accomplished today!
+        //     </Text>
+        //   </View>
+        //   {entries.length !== 0 && (
+        //     <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+        //       {/* <EntrySummary item={lastUserEntry()} /> */}
+        //       <Text>{JSON.stringify(entries)}</Text>
+        //     </View>
+        //   )}
+        //   {entries.length === 0 && (
+        //     <Image
+        //       source={require("../../assets/Welcome.png")}
+        //       style={styles.loginPic}
+        //     />
+        //   )}
+        // </View>
+        <Card style={{ marginHorizontal: 20, marginVertical: 30 }}>
+          <Card.Content>
+            <Text variant="titleMedium"></Text>
+            <Card.Cover
               source={require("../../assets/Welcome.png")}
-              style={styles.loginPic}
+              style={{ width: 300, height: 300, alignSelf: "center" }}
             />
-          )}
-        </View>
+            <Text variant="titleMedium" style={{ marginTop: 20 }}>
+              Tell Us all about your Accomplishments today!
+            </Text>
+          </Card.Content>
+        </Card>
       )}
 
       {/* USER IS NOT LOGGED IN */}

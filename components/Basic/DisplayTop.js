@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-const DisplayTop = () => {
+const DisplayTop = ({ pageName }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Get Stuff Done!</Text>
+      <Text style={styles.title}>{pageName}</Text>
     </View>
   );
 };
