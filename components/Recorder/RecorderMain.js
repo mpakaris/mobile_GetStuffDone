@@ -280,10 +280,8 @@ export default function RecorderMain() {
                       marginBottom: 0,
                     }}
                   >
-                    Info: {"\n"}
-                    An Entry for today already exists. {"\n"}
-                    If you want to change your Entry,{"\n"} first delete the
-                    existing one.
+                    An Entry for today already exists. {"\n"}If you want to
+                    change your Entry, please first delete the existing one.
                   </Text>
                 </Card.Content>
               </Card>
