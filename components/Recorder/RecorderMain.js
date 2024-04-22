@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { analyzeTranscript, sendAudioToBackend } from "../../api";
 import { deleteUserEntryByDate, saveDailyEntry } from "../../api/firebase.js";
@@ -268,41 +268,48 @@ export default function RecorderMain() {
             </SafeAreaView>
 
             {nextStep === "canDeleteFromDB" && !recording && (
-              <Text
-                variant="bodyMedium"
-                style={{
-                  color: "darkred",
-                  marginTop: 20,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  marginBottom: 30,
-                }}
-              >
-                Info: {"\n"}
-                An Entry for today already exists. {"\n"}
-                If you want to change your Entry,{"\n"} first delete the
-                existing one.
-              </Text>
+              <Card style={{ marginHorizontal: 20, marginTop: 20 }}>
+                <Card.Content>
+                  <Text
+                    variant="bodyMedium"
+                    style={{
+                      color: "darkred",
+                      marginTop: 0,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      marginBottom: 0,
+                    }}
+                  >
+                    Info: {"\n"}
+                    An Entry for today already exists. {"\n"}
+                    If you want to change your Entry,{"\n"} first delete the
+                    existing one.
+                  </Text>
+                </Card.Content>
+              </Card>
             )}
           </View>
         )}
 
       {status === "hasNoUser" && (
-        <Text
-          variant="bodyMedium"
-          style={{
-            color: "darkred",
-            marginTop: 20,
-            fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: 30,
-          }}
-        >
-          Info: {"\n"}
-          It appears you are not logged in! {"\n"}
-          You may record an entry and analyze it with AI. {"\n"}
-          To save your Entry in the Database, please log in.{"\n"}
-        </Text>
+        <Card style={{ marginHorizontal: 20, marginTop: 20 }}>
+          <Card.Content>
+            <Text
+              variant="bodyMedium"
+              style={{
+                color: "darkred",
+                marginTop: 0,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginBottom: 0,
+              }}
+            >
+              It appears you are not logged in! {"\n"}
+              You may record an entry and analyze it with AI. {"\n"}
+              To save your Entry in the Database, please log in.{"\n"}
+            </Text>
+          </Card.Content>
+        </Card>
       )}
 
       {/* <Text> {JSON.stringify(hasEntryToday)}</Text>

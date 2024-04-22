@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { Button, Text } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUserEntryByDate } from "../../api/firebase";
 import { createMockEntries } from "../../hooks/DatePickerMockData";
@@ -137,20 +137,23 @@ const DatePicker = () => {
           )}
 
           {!user && !selectedDate && (
-            <Text
-              variant="bodyMedium"
-              style={{
-                color: "darkred",
-                marginTop: 80,
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              Info: {"\n"}
-              It seems you are not logged in. {"\n"}
-              To show the functionality of our Journal,{"\n"}
-              we created some fictional entries for you.
-            </Text>
+            <Card style={{ marginHorizontal: 20, marginTop: 70 }}>
+              <Card.Content>
+                <Text
+                  variant="bodyMedium"
+                  style={{
+                    color: "darkred",
+                    marginTop: 0,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  It seems you are not logged in. {"\n"}
+                  To show the functionality of our Journal,{"\n"}
+                  we created some fictional entries for you.
+                </Text>
+              </Card.Content>
+            </Card>
           )}
         </View>
       ) : (
