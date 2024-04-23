@@ -27,7 +27,7 @@ const UserScreen = ({ entries }) => {
     >
       <Image
         source={require("../../assets/Welcome.png")}
-        style={{ width: 300, height: 300, alignSelf: "center" }}
+        style={{ width: 250, height: 250, alignSelf: "center" }}
       />
       <Card style={{ marginHorizontal: 20, marginTop: 20 }}>
         <Card.Content>

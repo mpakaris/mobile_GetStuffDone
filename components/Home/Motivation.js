@@ -11,8 +11,16 @@ const motivationalQuote = {
 };
 
 const Motivation = () => (
-  <Card style={{ marginHorizontal: 20, marginTop: 15 }}>
+  <Card style={{ marginHorizontal: 20, marginVertical: 15 }}>
     <Card.Content>
+      <Text
+        style={{
+          fontWeight: 700,
+          marginBottom: 7,
+        }}
+      >
+        Quote of the Week:
+      </Text>
       <Text
         style={{
           fontWeight: 300,
@@ -26,7 +34,7 @@ const Motivation = () => (
       <Text style={{ fontWeight: 700, marginTop: 0, alignSelf: "flex-end" }}>
         by {motivationalQuote.author}
       </Text>
-      <Text style={{ fontWeight: 500, marginTop: 20 }}>
+      <Text style={{ fontWeight: 500, marginTop: 20, lineHeight: 20 }}>
         {motivationalQuote.message}
       </Text>
       <View></View>
