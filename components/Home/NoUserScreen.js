@@ -12,11 +12,14 @@ const NoUserScreen = () => {
         <Card.Content>
           <Text
             variant="titleMedium"
-            style={{ marginTop: 0, alignSelf: "center" }}
+            style={{
+              marginTop: 0,
+              alignSelf: "center",
+              fontFamily: "lato",
+            }}
           >
             It seems that you are not Logged in.{"\n"}
-            While you can test the main functionalities even without account,
-            you can not save any entries.
+            But no worries, you can still try out the Recording function!
           </Text>
         </Card.Content>
       </Card>
